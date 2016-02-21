@@ -1,4 +1,7 @@
 var express = require('express');
+
+var inbox = require('./models/inbox.js');
+
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
