@@ -21,7 +21,7 @@ var readConfig = function(params){
 var auth = {
   unreadMails: function (callback) {
     var gmail = google.gmail('v1');
-    gmail.users.labels.list({
+    gmail.users.messages.list({
       auth: auth.oauth2Client,
       userId: 'me',
     }, function(err, response) {
@@ -30,7 +30,7 @@ var auth = {
         callback(err);
         return;
       }
-      var labels = response.labels;
+      var labels = response.messages;
       var result = [];
       if (labels.length == 0) {
         console.log('No labels found.');
@@ -38,7 +38,7 @@ var auth = {
         console.log('Labels:');
         for (var i = 0; i < labels.length; i++) {
           var label = labels[i];
-          result.push(label.name);
+          result.push(label);
         }
       }
       callback(result);
