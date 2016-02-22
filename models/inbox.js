@@ -4,7 +4,7 @@ var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
-module.exports = function(callback){
+module.exports = function(onNewToken){
   // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/gmail-nodejs-quickstart.json
   var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
@@ -62,6 +62,7 @@ module.exports = function(callback){
       scope: SCOPES
     });
     console.log('Authorize this app by visiting this url: ', authUrl);
+    onNewToken(authUrl);
     var rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
