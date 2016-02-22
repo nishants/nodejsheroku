@@ -17,6 +17,11 @@ app.get('/auth', function(request, response) {
   });
 });
 
+app.get('/emails', function(request, response){
+  inbox.unreadMails(function(mails){
+    response.send(JSON.stringify({mails: mails}));
+  })
+});
 
 app.post('/key', function (request, response) {
   inbox.fetchTokenWith(request.body.key);

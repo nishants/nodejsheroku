@@ -19,6 +19,31 @@ var readConfig = function(params){
 };
 
 var auth = {
+  unreadMails: function (callback) {
+    var gmail = google.gmail('v1');
+    gmail.users.labels.list({
+      auth: auth.oauth2Client,
+      userId: 'me',
+    }, function(err, response) {
+      if (err) {
+        console.log('The API returned an error: ' + err);
+        callback(err);
+        return;
+      }
+      var labels = response.labels;
+      var result = [];
+      if (labels.length == 0) {
+        console.log('No labels found.');
+      } else {
+        console.log('Labels:');
+        for (var i = 0; i < labels.length; i++) {
+          var label = labels[i];
+          result.push(label.name);
+        }
+      }
+      callback(result);
+    });
+  },
   fetchTokenWith: function(code){
     auth.oauth2Client.getToken(code, function(err, token) {
       if (err) {
