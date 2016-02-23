@@ -73,9 +73,10 @@ var auth = {
       gmail.users.messages.get({
         auth: auth.oauth2Client,
         userId: 'me',
-        'id': result[0].id
+        'id': result[0].id,
+        format: 'raw' //return body content as raw base64 encoded text.
       },function(err, email){
-        console.log("Mail found: "+JSON.stringify(email));
+        console.log(new Buffer(email.raw, 'base64').toString('ascii'))
       });
 
       callback(result);
