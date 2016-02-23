@@ -70,6 +70,14 @@ var auth = {
           result.push(label);
         }
       }
+      gmail.users.messages.get({
+        auth: auth.oauth2Client,
+        userId: 'me',
+        'id': result[0].id
+      },function(err, email){
+        console.log("Mail found: "+JSON.stringify(email));
+      });
+
       callback(result);
     });
   },
