@@ -20,7 +20,7 @@ var readConfig = function(params){
 
 
 function storeToken(token) {
-  fs.writeFile(TOKEN_PATH, JSON.stringify(token));
+  //fs.writeFile(TOKEN_PATH, JSON.stringify(token));
 }
 
 function listLabels(auth) {
