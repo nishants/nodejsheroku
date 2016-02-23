@@ -9,7 +9,7 @@ var googleAuth = require('google-auth-library');
 var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'credentials.json';
+var TOKEN_PATH = 'credentials.json';
 
 
 var readConfig = function(params){
@@ -18,7 +18,36 @@ var readConfig = function(params){
   })
 };
 
+
+function storeToken(token) {
+  fs.writeFile(TOKEN_PATH, JSON.stringify(token));
+}
+
+function listLabels(auth) {
+  var gmail = google.gmail('v1');
+  gmail.users.labels.list({
+    auth: auth,
+    userId: 'me',
+  }, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      return;
+    }
+    var labels = response.labels;
+    if (labels.length == 0) {
+      console.log('No labels found.');
+    } else {
+      console.log('Labels:');
+      for (var i = 0; i < labels.length; i++) {
+        var label = labels[i];
+        console.log('- %s', label.name);
+      }
+    }
+  });
+};
+
 var auth = {
+  authUrl: null,
   unreadMails: function (callback) {
     var gmail = google.gmail('v1');
     gmail.users.messages.list({
@@ -56,7 +85,8 @@ var auth = {
       listLabels(auth.oauth2Client);
     });
   },
-  init: function(onInit){
+  init: function(){
+    var onInit = function(){};
     readConfig({
           file : 'client_secret.json',
           error  : function(err){
@@ -75,6 +105,7 @@ var auth = {
               file: TOKEN_PATH,
               then: function (token) {
                 oauth2Client.credentials = token;
+                auth.authUrl = null;
                 onInit(null, oauth2Client);
               },
               error: function (error) {
@@ -82,6 +113,7 @@ var auth = {
                   access_type: 'offline',
                   scope: SCOPES
                 });
+                auth.authUrl = authUrl;
                 onInit(authUrl);
               }
             });
@@ -91,31 +123,5 @@ var auth = {
   }
 };
 
+auth.init();
 module.exports = auth;
-
-function storeToken(token) {
-  fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-}
-
-function listLabels(auth) {
-  var gmail = google.gmail('v1');
-  gmail.users.labels.list({
-    auth: auth,
-    userId: 'me',
-  }, function(err, response) {
-    if (err) {
-      console.log('The API returned an error: ' + err);
-      return;
-    }
-    var labels = response.labels;
-    if (labels.length == 0) {
-      console.log('No labels found.');
-    } else {
-      console.log('Labels:');
-      for (var i = 0; i < labels.length; i++) {
-        var label = labels[i];
-        console.log('- %s', label.name);
-      }
-    }
-  });
-};

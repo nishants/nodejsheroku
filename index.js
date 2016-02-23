@@ -12,9 +12,7 @@ app.set('port', (process.env.PORT || 5000));
 
 
 app.get('/auth', function(request, response) {
-  inbox.init(function(authUrl){
-    response.send(JSON.stringify({auth: {link: authUrl}}));
-  });
+  response.send(JSON.stringify({auth: {link: inbox.authUrl}}))
 });
 
 app.get('/emails', function(request, response){
