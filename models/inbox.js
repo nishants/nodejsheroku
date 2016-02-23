@@ -76,10 +76,8 @@ var auth = {
         'id': result[0].id,
         format: 'raw' //return body content as raw base64 encoded text.
       },function(err, email){
-        console.log(new Buffer(email.raw, 'base64').toString('ascii'))
+        callback(new Buffer(email.raw, 'base64').toString('ascii'))
       });
-
-      callback(result);
     });
   },
   fetchTokenWith: function(code){
