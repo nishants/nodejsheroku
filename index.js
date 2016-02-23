@@ -3,6 +3,8 @@ var express = require('express');
 var inbox = require('./models/inbox.js');
 
 var app = express();
+var pg = require('pg');
+
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
@@ -29,5 +31,18 @@ app.post('/key', function (request, response) {
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
+
+var localDb = "postgresql://localhost:5432/test";
+
+var initDb = function(){
+  pg.connect(process.env.DATABASE_URL || localDb, function(err, client, done) {
+    client.query('SELECT * FROM test_db', function(err, result) {
+      done();
+      err ? console.error(err) : console.log(JSON.stringify(result.rows))
+    });
+  });
+};
+
+initDb();
 
 
