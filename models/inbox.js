@@ -9,7 +9,7 @@ var googleAuth = require('google-auth-library');
 var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = 'credentials.json';
+var TOKEN_PATH = TOKEN_DIR + 'credentials.json';
 
 
 var readConfig = function(params){
