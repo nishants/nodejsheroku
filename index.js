@@ -18,9 +18,9 @@ app.get('/auth', function(request, response) {
 });
 
 app.get('/emails', function(request, response){
-  var loginId = "nishnat.singh87@gmail.com";
+  var loginId = "nishant.singh87@gmail.com";
 
-  inbox.unreadMails({from : loginId}).then(function(mails){
+  inbox.unreadMailsFrom(loginId).then(function(mails){
     response.send(JSON.stringify({mails: mails}));
   })
 });

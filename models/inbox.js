@@ -48,38 +48,40 @@ function listLabels(auth) {
 
 var auth = {
   authUrl: null,
-  unreadMails: function () {
+  unreadMailsFrom: function (senderMail) {
     var gmail = google.gmail('v1');
 
     return new Promise(function(sucess, reject){
       gmail.users.messages.list({
         auth: auth.oauth2Client,
         userId: 'me',
+        q: "is:unread from:"+senderMail
       }, function(err, response) {
         if (err) {
           console.log('The API returned an error: ' + err);
           reject(err);
           return;
         }
-        var labels = response.messages;
-        var result = [];
-        if (labels.length == 0) {
-          console.log('No labels found.');
+        if (response.resultSizeEstimate == 0) {
+          sucess("no mails to show.");
+          return;
         } else {
-          console.log('Labels:');
+          var labels = response.messages;
+          var result = [];
           for (var i = 0; i < labels.length; i++) {
             var label = labels[i];
             result.push(label);
           }
+          gmail.users.messages.get({
+            auth: auth.oauth2Client,
+            userId: 'me',
+            'id': result[0].id,
+            format: 'raw' //return body content as raw base64 encoded text.
+          },function(err, email){
+            sucess(new Buffer(email.raw, 'base64').toString('ascii'));
+          });
         }
-        gmail.users.messages.get({
-          auth: auth.oauth2Client,
-          userId: 'me',
-          'id': result[0].id,
-          format: 'raw' //return body content as raw base64 encoded text.
-        },function(err, email){
-          sucess(new Buffer(email.raw, 'base64').toString('ascii'))
-        });
+
       });
     });
 
