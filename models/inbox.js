@@ -72,13 +72,21 @@ var auth = {
             var label = labels[i];
             result.push(label);
           }
-          gmail.users.messages.get({
-            auth: auth.oauth2Client,
-            userId: 'me',
-            'id': result[0].id,
-            format: 'raw' //return body content as raw base64 encoded text.
-          },function(err, email){
-            sucess(new Buffer(email.raw, 'base64').toString('ascii'));
+          var mails = [];
+          response.messages.forEach(function(){
+            gmail.users.messages.get({
+              auth: auth.oauth2Client,
+              userId: 'me',
+              'id': result[0].id,
+              format: 'raw' //return body content as raw base64 encoded text.
+            },function(err, email){
+              if(err) {
+                reject("Error reading mail : " + err);
+                return;
+              }
+              mails.push(new Buffer(email.raw, 'base64').toString('ascii'));
+              mails.length == response.messages.length ? sucess(mails) : "";
+            });
           });
         }
 
