@@ -48,37 +48,41 @@ function listLabels(auth) {
 
 var auth = {
   authUrl: null,
-  unreadMails: function (callback) {
+  unreadMails: function () {
     var gmail = google.gmail('v1');
-    gmail.users.messages.list({
-      auth: auth.oauth2Client,
-      userId: 'me',
-    }, function(err, response) {
-      if (err) {
-        console.log('The API returned an error: ' + err);
-        callback(err);
-        return;
-      }
-      var labels = response.messages;
-      var result = [];
-      if (labels.length == 0) {
-        console.log('No labels found.');
-      } else {
-        console.log('Labels:');
-        for (var i = 0; i < labels.length; i++) {
-          var label = labels[i];
-          result.push(label);
-        }
-      }
-      gmail.users.messages.get({
+
+    return new Promise(function(sucess, reject){
+      gmail.users.messages.list({
         auth: auth.oauth2Client,
         userId: 'me',
-        'id': result[0].id,
-        format: 'raw' //return body content as raw base64 encoded text.
-      },function(err, email){
-        callback(new Buffer(email.raw, 'base64').toString('ascii'))
+      }, function(err, response) {
+        if (err) {
+          console.log('The API returned an error: ' + err);
+          reject(err);
+          return;
+        }
+        var labels = response.messages;
+        var result = [];
+        if (labels.length == 0) {
+          console.log('No labels found.');
+        } else {
+          console.log('Labels:');
+          for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            result.push(label);
+          }
+        }
+        gmail.users.messages.get({
+          auth: auth.oauth2Client,
+          userId: 'me',
+          'id': result[0].id,
+          format: 'raw' //return body content as raw base64 encoded text.
+        },function(err, email){
+          sucess(new Buffer(email.raw, 'base64').toString('ascii'))
+        });
       });
     });
+
   },
   fetchTokenWith: function(code){
     auth.oauth2Client.getToken(code, function(err, token) {
