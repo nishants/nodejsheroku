@@ -1,6 +1,7 @@
 var express = require('express');
 
 var inbox = require('./models/inbox.js');
+var mailParser = require('./models/mail-parser.js');
 
 var app = express();
 var pg = require('pg');
@@ -21,7 +22,9 @@ app.get('/emails', function(request, response){
   var loginId = "nishant.singh87@gmail.com";
 
   inbox.unreadMailsFrom(loginId).then(function(mails){
-    response.send(JSON.stringify({mails: mails}));
+    mailParser.parse(mails).then(function(referrals){
+      response.send(JSON.stringify({referrals: referrals}));
+    });
   })
 });
 
