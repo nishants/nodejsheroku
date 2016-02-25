@@ -63,7 +63,7 @@ var auth = {
           return;
         }
         if (response.resultSizeEstimate == 0) {
-          sucess("no mails to show.");
+          sucess([]);
           return;
         } else {
           var labels = response.messages;
