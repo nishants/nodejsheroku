@@ -6,6 +6,9 @@ var mailParser = require('./models/mail-parser.js');
 var app = express();
 var pg = require('pg');
 
+var expressLogging = require('express-logging'),
+    logger = require('logops')
+app.use(expressLogging(logger));
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
