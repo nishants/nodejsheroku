@@ -58,7 +58,12 @@ module.exports = {
       var parsed = [];
       if(mails.length == 0) success([]);
       mails.forEach(function(mail){
-        parsed.push(parse(mail));
+        parsed.push({
+          id: mail.id,
+          body: mail.body,
+          subject: mail.subject,
+          suggestions: parse(mail.body)
+        });
         if(parsed.length == mails.length){
           success(parsed);
         }

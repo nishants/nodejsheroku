@@ -1,3 +1,4 @@
+var mailStartsFrom = "---------- Forwarded message ----------";
 
 var fs = require('fs');
 var readline = require('readline');
@@ -84,7 +85,11 @@ var auth = {
                 reject("Error reading mail : " + err);
                 return;
               }
-              mails.push(new Buffer(email.raw, 'base64').toString('ascii'));
+              var body = new Buffer(email.raw, 'base64').toString('ascii');
+              mails.push({
+                subject: body && body.split("Subject")[1].split("To:")[0],
+                body: body && body.split(mailStartsFrom)[1],
+              });
               mails.length == response.messages.length ? sucess(mails) : "";
             });
           });
