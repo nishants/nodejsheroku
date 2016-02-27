@@ -87,7 +87,7 @@ var auth = {
               }
               var body = new Buffer(email.raw, 'base64').toString('ascii');
               mails.push({
-                subject: body && body.split("Subject")[1].split("To:")[0],
+                subject: body && body.split("Subject:")[1].split("To:")[0],
                 body: body && body.split(mailStartsFrom)[1],
               });
               mails.length == response.messages.length ? sucess(mails) : "";
