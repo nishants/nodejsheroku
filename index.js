@@ -19,7 +19,7 @@ app.set('port', (process.env.PORT || 5000));
 // CORS
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Content-Type",'application/json');
   next();
 });
@@ -29,7 +29,7 @@ app.get('/auth', function(request, response) {
 });
 
 app.get('/emails', function(request, response){
-  var loginId = "nishant.singh87@gmail.com";
+  var loginId = request.headers.authorization;
 
   inbox.unreadMailsFrom(loginId).then(function(mails){
     mailParser.parse(mails).then(function(referrals){
