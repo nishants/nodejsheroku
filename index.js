@@ -4,7 +4,6 @@ var inbox = require('./models/inbox.js');
 var mailParser = require('./models/mail-parser.js');
 
 var app = express();
-var pg = require('pg');
 
 var expressLogging = require('express-logging'),
     logger = require('logops')
