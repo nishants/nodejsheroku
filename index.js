@@ -47,16 +47,3 @@ app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
-var localDb = "postgresql://localhost:5432/test";
-
-var initDb = function(){
-  pg.connect(process.env.DATABASE_URL || localDb, function(err, client, done) {
-    client.query('SELECT * FROM test_db', function(err, result) {
-      done();
-      err ? console.error(err) : console.log(JSON.stringify(result.rows))
-    });
-  });
-};
-
-initDb();
-
